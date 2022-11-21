@@ -1,7 +1,7 @@
 <!DOCTYPE html><html>
     <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Major</title>
-    
+    s
         <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
     
           <!-- bootstrap, need to use https for these links -->
@@ -15,8 +15,8 @@
       <div class="container">
           <h2>Select a Majors</h2>
           <div style='padding: 5px;'> 
-             <button type='button' class="btn btn-primary" onClick="getData('CIT Majors')">CIT Majors</button> 
-             <button type='button' class="btn btn-primary" onClick="getData('Business Majors')">Business Majors</button> 
+             <button type='button' class="btn btn-primary" onClick="getData('CIT ')">CIT Majors</button> 
+             <button type='button' class="btn btn-primary" onClick="getData('Bus')">Business Majors</button> 
     
           </div>
       
@@ -42,57 +42,42 @@
     </div>
   </body>
 
+<!-- Handlebars template -->
+  <script type="text/x-handlebars-template" id="MajorTemplate">
+      <table class="table table-striped">
+          <tr><th>Name</th><th>Major</th><th>Midterm</th><th>Final</th></tr>
+             {{#each rows}}
+                <tr>
+                     <td>{{name}}</td><td>{{Major}}</td><td>{{Midterm}}</td><td>{{Final}}</td>
+                </tr>
+             {{/each}}
+      </table>
+  </script>
+
+  <!-- application ajax code -->
   <script>
-    var Select = [{"name":"Rosie","major":"CIT","midterm":88,"final":87},
-{"name":"Bruce","major":"CIT","midterm":68,"final":87},
-{"name":"Carol","major":"BUS","midterm":75,"final":87},
-{"name":"David","major":"CIT","midterm":85,"final":77},
-{"name":"Ellen","major":"CIT","midterm":98,"final":77},
-{"name":"Frank","major":"BUS","midterm":53,"final":61},
-{"name":"Grady","major":"BUS","midterm":93,"final":92},
-{"name":"Hanna","major":"BUS","midterm":88,"final":56},
-{"name":"Irene","major":"CIT","midterm":79,"final":64},
-{"name":"Jacky","major":"CIT","midterm":89,"final":80},
-{"name":"Karen","major":"CIT","midterm":85,"final":70},
-{"name":"Lamar","major":"BUS","midterm":73,"final":77},
-{"name":"Mable","major":"CIT","midterm":74,"final":70},
-{"name":"Nancy","major":"CIT","midterm":40,"final":82},
-{"name":"Ohmar","major":"CIT","midterm":70,"final":93},
-{"name":"Chuck","major":"BUS","midterm":80,"final":54},
-{"name":"Paula","major":"BUS","midterm":88,"final":61},
-{"name":"Quint","major":"CIT","midterm":99,"final":80},
-{"name":"Ronda","major":"CIT","midterm":71,"final":77},
-{"name":"Sammy","major":"CIT","midterm":98,"final":99},
-      
-    ];
-
-    document.addEventListener('DOMContentLoaded', function() {     // after page loads, more or less
-
-document.querySelector('#btn').onclick = async function(){
+   
+   async function getData (major){
     var response = await fetch('cit5students.json');        // ajax GET request
 
     if(response.ok) {
          var data = await response.json();         // 'data' holds an array of objects
 
-         var tableContents = "<table cellspacing='5'>"     // generate table
-         tableContents += "<tr><td>Name</td><td>Midterm</td><td>Final</td></tr>";
+         major = data.filter( (major) => major.CIT == selected_bus );    // filter data array for selected major  
 
-         for(i = 0; i < data.length; i++) {
-             tableContents += `<tr><td> ${data[i].name} </td>
-                    <td> ${data[i].midterm} </td>    // make rows using template literals
-                    <td> ${data[i].final} </td></tr>`;
-         }
+         var templateText = document.getElementById('majorTemplate').innerHTML;
+           var compiledTemplateText = Handlebars.compile(templateText);   // get and compile template code
+           compiledHtml = compiledTemplateText({ rows: bus_major })      // apply data to template
+           document.getElementById('majorTable').innerHTML = compiledHtml; 
+       }
+       else {
+           document.querySelector('#majorTable').innerHTML = "There was an error, or menu items not found";
+       }	
+      
 
-         tableContents += "</table>";
-         document.querySelector('#result').innerHTML = tableContents;
-    }
-    else {
-         document.querySelector('#result').innerHTML = "Data not found";
-    }
 };
 
-});
 </script>
-
+  
 </body>
 </html>

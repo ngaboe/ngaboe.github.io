@@ -15,31 +15,14 @@
       <div class="container">
           <h2>Select a Majors</h2>
           <div style='padding: 5px;'> 
-             <button type='button' class="btn btn-primary" onClick="getData('CIT ')">CIT Majors</button> 
-             <button type='button' class="btn btn-primary" onClick="getData('Bus')">Business Majors</button> 
+             <button type='button' class="btn btn-primary" onClick="getData('CIT')">CIT Majors</button> 
+             <button type='button' class="btn btn-primary" onClick="getData('BUS')">Business Majors</button> 
     
           </div>
       
       <h3>We filter our dataset by Majors</h3>
-      <div class="row">        
-        <table id="table" class="table table-stripped">
-          <thead>
-            <tr>
-              <td>name</td>
-              <td>Major</td>
-              <td>Midterm</td>
-              <td>Final</td>
-            </tr>
-          </thead>
-          <tbody id="tbody">
-
-          </tbody>
-        </table>
-        </div>
-
-        
-      </div>
-    </div>
+      
+      <div id='majorTable'></div>
   </body>
 
 <!-- Handlebars template -->
@@ -48,7 +31,7 @@
           <tr><th>Name</th><th>Major</th><th>Midterm</th><th>Final</th></tr>
              {{#each rows}}
                 <tr>
-                     <td>{{name}}</td><td>{{Major}}</td><td>{{Midterm}}</td><td>{{Final}}</td>
+                     <td>{{name}}</td><td>{{major}}</td><td>{{midterm}}</td><td>{{final}}</td>
                 </tr>
              {{/each}}
       </table>
@@ -58,16 +41,17 @@
   <script>
    
    async function getData (major){
+    //console.log(major)
     var response = await fetch('cit5students.json');        // ajax GET request
-
+	
     if(response.ok) {
          var data = await response.json();         // 'data' holds an array of objects
-
-         major = data.filter( (major) => major.CIT == selected_bus );    // filter data array for selected major  
-
-         var templateText = document.getElementById('majorTemplate').innerHTML;
+		 console.log(data)
+         majors = data.filter( (student) => student.major == major );    // filter data array for selected major  
+		 console.log(majors)
+         var templateText = document.getElementById('MajorTemplate').innerHTML;
            var compiledTemplateText = Handlebars.compile(templateText);   // get and compile template code
-           compiledHtml = compiledTemplateText({ rows: bus_major })      // apply data to template
+           compiledHtml = compiledTemplateText({ rows: majors })      // apply data to template
            document.getElementById('majorTable').innerHTML = compiledHtml; 
        }
        else {
